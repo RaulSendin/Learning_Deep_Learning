@@ -17,7 +17,7 @@ X_train = X_train / 16.0
 X_test = X_test / 16.0
 
 # Configuración del modelo con parámetros adicionales para guardar historial
-red_neuronal = MLPClassifier(
+mlp = MLPClassifier(
     hidden_layer_sizes=(100, 50),
     activation='relu',
     solver='adam',
@@ -33,11 +33,11 @@ n_iteraciones = 40
 
 # Entrenar y registrar evolución
 for i in range(n_iteraciones):
-    red_neuronal.fit(X_train, y_train)
+    mlp.fit(X_train, y_train)
 
     # Calcular precisión en entrenamiento y prueba
-    train_pred = red_neuronal.predict(X_train)
-    test_pred = red_neuronal.predict(X_test)
+    train_pred = mlp.predict(X_train)
+    test_pred = mlp.predict(X_test)
 
     train_acc = accuracy_score(y_train, train_pred)
     test_acc = accuracy_score(y_test, test_pred)
@@ -46,10 +46,10 @@ for i in range(n_iteraciones):
     test_accuracies.append(test_acc)
 
 # Precisión final
-precision_final = accuracy_score(y_test, red_neuronal.predict(X_test))
+precision_final = accuracy_score(y_test, mlp.predict(X_test))
 print(f"\nPrecisión final del modelo: {precision_final * 100:.2f}%")
 print("\nInforme detallado de clasificación:")
-print(classification_report(y_test, red_neuronal.predict(X_test)))
+print(classification_report(y_test, mlp.predict(X_test)))
 
 # Gráfica de evolución
 plt.figure(figsize=(10, 6))

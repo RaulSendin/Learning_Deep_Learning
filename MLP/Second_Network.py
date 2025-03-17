@@ -21,7 +21,7 @@ X_test = scaler.transform(X_test)
 mlp = MLPClassifier(hidden_layer_sizes=(15, 10),
                     activation='relu',
                     solver='adam',
-                    max_iter=200,
+                    max_iter=300,
                     random_state=42)
 
 # Entrenamos el modelo con los datos de entrenamiento
@@ -33,8 +33,5 @@ y_pred = mlp.predict(X_test)
 # Evaluamos el desempeño del modelo
 print("Reporte de clasificación:")
 print(classification_report(y_test, y_pred))
-
-print("Matriz de confusión:")
-print(confusion_matrix(y_test, y_pred))
 
 print("Exactitud (Accuracy):", accuracy_score(y_test, y_pred))
