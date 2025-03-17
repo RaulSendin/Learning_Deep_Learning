@@ -29,7 +29,7 @@ red_neuronal = MLPClassifier(
 # Variables para guardar precisión
 train_accuracies = []
 test_accuracies = []
-n_iteraciones = 1000
+n_iteraciones = 40
 
 # Entrenar y registrar evolución
 for i in range(n_iteraciones):
