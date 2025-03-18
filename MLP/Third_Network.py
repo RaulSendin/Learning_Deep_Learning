@@ -38,10 +38,3 @@ y_pred = mlp.predict(X_test)
 print("\nPrecisión del modelo:", accuracy_score(y_test, y_pred))
 print("\nReporte de clasificación:")
 print(classification_report(y_test, y_pred))
-
-# Mostrar información sobre el modelo
-print("\nInformación del modelo:")
-print(f"Número de capas: {mlp.n_layers_}")
-print(f"Capas ocultas: {mlp.hidden_layer_sizes}")
-print(f"Función de activación: {mlp.activation}")
-print(f"Optimizador: {mlp.solver}")
