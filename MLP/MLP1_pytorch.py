@@ -52,10 +52,10 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Entrenamiento del modelo
-epochs = 100  # Número de épocas para entrenar
+epochs = 40  # Número de épocas para entrenar
 for epoch in range(epochs):
     model.train()  # Poner el modelo en modo entrenamiento
-    running_loss = 0.0
+
     for inputs, labels in train_loader:
         optimizer.zero_grad()         # Reiniciar gradientes
         outputs = model(inputs)         # Hacer predicciones
@@ -63,8 +63,6 @@ for epoch in range(epochs):
         loss.backward()                 # Retropropagación
         optimizer.step()                # Actualizar pesos
         
-        running_loss += loss.item()
-    promedio_loss = running_loss / len(train_loader)
    
 
 # Evaluación del modelo
