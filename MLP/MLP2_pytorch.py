@@ -45,10 +45,10 @@ class Net(nn.Module):
 # Inicializar la red neuronal, función de pérdida y optimizador
 model = Net()
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.01)
+optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Función de entrenamiento
-def train(model, X_train, y_train, epochs=1000):
+def train(model, X_train, y_train, epochs=300):
     model.train()
     for epoch in range(epochs):
         optimizer.zero_grad()
