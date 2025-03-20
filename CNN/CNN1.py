@@ -5,6 +5,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 import numpy as np
 from tensorflow.keras.datasets import mnist
+import matplotlib.pyplot as plt
 
 # 📌 Verificar si 'mps' está disponible (GPU en Mac)
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
@@ -27,14 +28,11 @@ y_train_tensor = torch.tensor(y_train, dtype=torch.long)
 x_test_tensor = torch.tensor(x_test)
 y_test_tensor = torch.tensor(y_test, dtype=torch.long)
 
-# 📌 Crear DataLoader
-batch_size = 64
-
 train_dataset = TensorDataset(x_train_tensor, y_train_tensor)
 test_dataset = TensorDataset(x_test_tensor, y_test_tensor)
 
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 # 📌 Definir la CNN
 class CNN(nn.Module):
@@ -92,3 +90,35 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
 
 print(f"Precisión en el conjunto de prueba: {100 * correct / total:.2f}%")
+
+# 📌 Mostrar ejemplos de predicciones incorrectas
+model.eval()
+misclassified_examples = []
+misclassified_labels = []
+misclassified_predictions = []
+
+with torch.no_grad():
+    for images, labels in test_loader:
+        images, labels = images.to(device), labels.to(device)
+        outputs = model(images)
+        _, predicted = torch.max(outputs, 1)
+        
+        # Encontrar predicciones incorrectas
+        incorrect_mask = predicted != labels
+        if incorrect_mask.any():
+            misclassified_examples.extend(images[incorrect_mask].cpu())
+            misclassified_labels.extend(labels[incorrect_mask].cpu())
+            misclassified_predictions.extend(predicted[incorrect_mask].cpu())
+            
+            if len(misclassified_examples) >= 5:
+                break
+
+# Mostrar los primeros 5 ejemplos mal clasificados
+plt.figure(figsize=(15, 3))
+for i in range(min(5, len(misclassified_examples))):
+    plt.subplot(1, 5, i+1)
+    plt.imshow(misclassified_examples[i].squeeze(), cmap="gray")
+    plt.title(f"Pred: {misclassified_predictions[i].item()}\nReal: {misclassified_labels[i].item()}")
+    plt.axis('off')
+plt.tight_layout()
+plt.show()
