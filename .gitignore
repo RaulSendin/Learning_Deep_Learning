@@ -58,3 +58,46 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyTorch
+*.pth
+*.pt
+*.pkl
+*.ckpt
+
+# Dataset files
+data/
+data/MNIST/raw/
+data/cifar-10-batches-py/
+data/cifar-10-python.tar.gz
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+
+# Model outputs and checkpoints
+runs/
+checkpoints/
+outputs/
+results/
+
+# Local development configuration
+.env
+config.local.yaml
