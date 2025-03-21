@@ -60,7 +60,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # 📌 Entrenamiento de la red
-epochs = 5
+epochs = 2
 for epoch in range(epochs):
     model.train()
     running_loss = 0.0
@@ -112,6 +112,12 @@ with torch.no_grad():
             
             if len(misclassified_examples) >= 5:
                 break
+
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+# Usar la instancia del modelo en lugar de la clase
+print(f"Cantidad de parámetros entrenables: {count_parameters(model)}")
 
 # Mostrar los primeros 5 ejemplos mal clasificados
 plt.figure(figsize=(15, 3))
