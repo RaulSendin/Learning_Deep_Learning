@@ -25,3 +25,36 @@ Thumbs.db
 .vscode/
 .idea/
 *.sublime-*
+
+# CIFAR-10 dataset files
+data/cifar-10-batches-py/
+data/cifar-10-python.tar.gz
+data/*.gz
+data/batches.meta
+data/data_batch_*
+data/test_batch
+data/t10k*
+data/train*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
