@@ -20,7 +20,6 @@ os.makedirs('./data', exist_ok=True)
 
 # Data preprocessing and augmentation
 transform_train = transforms.Compose([
-    transforms.RandomCrop(32, padding=4),
     transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
@@ -98,9 +97,8 @@ class ResNet(nn.Module):
         self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
         self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
         self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
-        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.linear = nn.Linear(512*block.expansion, num_classes)
+        self.linear = nn.Linear(256*block.expansion, num_classes)
 
     def _make_layer(self, block, planes, num_blocks, stride):
         strides = [stride] + [1]*(num_blocks-1)
@@ -115,15 +113,14 @@ class ResNet(nn.Module):
         out = self.layer1(out)
         out = self.layer2(out)
         out = self.layer3(out)
-        out = self.layer4(out)
         out = self.avgpool(out)
         out = out.view(out.size(0), -1)
         out = self.linear(out)
         return out
 
-# Create ResNet18 model
-def ResNet18():
-    return ResNet(BasicBlock, [2, 2, 2, 2])
+# Create ResNet14 model (simplified version)
+def ResNet14():
+    return ResNet(BasicBlock, [2, 2, 2])
 
 # Training function
 def train(model, trainloader, criterion, optimizer, epoch):
@@ -190,17 +187,17 @@ def evaluate(model, testloader):
 # Main training loop
 if __name__ == '__main__':
     try:
-        model = ResNet18().to(device)
+        model = ResNet14().to(device)
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.SGD(model.parameters(), lr=0.1,
+        optimizer = optim.SGD(model.parameters(), lr=0.05,
                              momentum=0.9, weight_decay=5e-4)
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=200)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100)
 
         print("Starting Training...")
         start_time = time.time()
 
         best_acc = 0.0
-        for epoch in range(200):  # train for 200 epochs
+        for epoch in range(100):  # train for 100 epochs
             train(model, trainloader, criterion, optimizer, epoch)
             accuracy = evaluate(model, testloader)
             print(f'Epoch {epoch + 1}: Accuracy = {accuracy:.2f}%')
@@ -208,7 +205,7 @@ if __name__ == '__main__':
             # Save best model
             if accuracy > best_acc:
                 best_acc = accuracy
-                torch.save(model.state_dict(), 'resnet18_cifar10_best.pth')
+                torch.save(model.state_dict(), 'resnet14_cifar10_best.pth')
                 print(f"New best model saved with accuracy: {best_acc:.2f}%")
                 
             scheduler.step()
@@ -217,7 +214,7 @@ if __name__ == '__main__':
         print(f"Best accuracy: {best_acc:.2f}%")
 
         # Save the final model
-        torch.save(model.state_dict(), 'resnet18_cifar10_final.pth')
+        torch.save(model.state_dict(), 'resnet14_cifar10_final.pth')
         print("Final model saved")
         
     except KeyboardInterrupt:
@@ -229,7 +226,7 @@ if __name__ == '__main__':
             'optimizer_state_dict': optimizer.state_dict(),
             'scheduler_state_dict': scheduler.state_dict(),
             'best_acc': best_acc
-        }, 'resnet18_cifar10_checkpoint.pth')
+        }, 'resnet14_cifar10_checkpoint.pth')
         print("Checkpoint saved")
     except Exception as e:
         print(f"Error during training: {e}")
